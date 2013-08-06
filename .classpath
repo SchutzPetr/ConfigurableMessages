@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="lib" path="C:/Users/Petr/Downloads/jar/Vault.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Petr/Downloads/jar/Stats.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Petr/Desktop/GeoIPTools.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Petr/Downloads/jar/mcMMO.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Petr/Desktop/Heroes.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Petr/Downloads/Test/Residence.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Petr/Downloads/Test/craftbukkit.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Petr/Downloads/Test/MagicSpells.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

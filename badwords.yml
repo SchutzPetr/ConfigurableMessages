@@ -1,0 +1,16 @@
+#  ----------------------------------------------------
+#  ConfigurableMessages - Badwordsconfig file
+#  ----------------------------------------------------
+#  Autor: Sicka_gp 
+#  ----------------------------------------------------
+#  Config version: 1  
+
+#Replace badwords to ***
+badwords:
+#only Example
+- 'fuck'
+
+#Blocking Spam with advertising on other servers
+IP:
+#only Example
+- ':25565'

@@ -1,0 +1,67 @@
+#  ----------------------------------------------------
+#  ConfigurableMessages - Config file
+#  ----------------------------------------------------
+#  Autor: Sicka_gp 
+#  ----------------------------------------------------
+Config_version: 2
+AutoUpdate: true
+
+Messages:
+   #Enable join/quit/leave message.
+   enable: true
+   #Message sent to players when they join
+   welcome-message: 'Welcome to server.'
+   #Enable Group join/quit/leave message.
+   #Players have colorful names by their group
+   enableGroups: true
+   #Default Message
+   Default: 
+       join-message: '{NAME} &ejoin the game!'
+       quit-message: '{NAME} &equit the game!'
+       kick-message: '{NAME} &equit the game!'
+   #Groups Message 
+   #Requires vault    
+   Groups:
+       #Group name
+       #Requires vault
+       Admin:
+          join-message: '{DISPLAYNAME} &ejoin the game!'
+          quit-message: '{DISPLAYNAME} &equit the game!'
+          kick-message: '{DISPLAYNAME} &equit the game!'
+       Player:
+          join-message: '{DISPLAYNAME} &ejoin the game!'
+          quit-message: '{DISPLAYNAME} &equit the game!'
+          kick-message: '{DISPLAYNAME} &equit the game!'
+          
+Newbies:
+   #Enable first join message
+   First-message-enable: true
+   #First join message
+   First-message: '&5Welcome to {SERVER_NAME} server!'
+   #Enable kits for newbies
+   Kits: false
+   #Kits setup
+   Items:
+   # -'<itemId>:<itemData>-<amount>' 
+   - '17:0-16'
+   - '17:1-16'
+   - '17:2-16'
+   - '17:3-16'
+   
+Sidebar: 
+  #Enable Sidebar
+  enable: true
+  #Sidebar name
+  name: '&6Information'
+  #Update interval
+  Update: 10
+  SettingItems:
+  #- '&4Balance;%bal'
+  
+     
+     
+     
+     
+     
+     
+       
