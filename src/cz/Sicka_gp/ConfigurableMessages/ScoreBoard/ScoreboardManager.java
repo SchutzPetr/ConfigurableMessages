@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -56,23 +55,6 @@ public class ScoreboardManager {
     	ConfigurableMessages.getPlugin().getScoreBoardPacketManager().ScoreBoardObjective(p, name, "Information", 1);
     }
     
-    public void UpdateScoress(Player p){
-    	for(String score : ConfigurableMessages.getPlugin().getConfig().getStringList("Sidebar.SettingItems")){
-		    String[] scores = score.split(";", 2);
-		    String scorename = scores[0];
-		    String scorevaule = scores[1];
-		    scorename = ChatColor.translateAlternateColorCodes("&".charAt(0), scorename);
-		    if(!(scorename.length() > 16)){
-		        try{
-		            int scoresvaule = ScoreboardItemsReplacer.getReplacedInt(scorevaule, p);
-		            ITEMS.put(scorename, scorevaule);
-		            ConfigurableMessages.getPlugin().getScoreBoardPacketManager().ScoreBoardScore(p, scorename, name, scoresvaule, 0);
-		        }catch(Exception e){
-		        	e.printStackTrace();
-		        }
-		    }
-		}
-    }
     public void UpdateScores(Player p){
     	for (Entry<String, String> e : ITEMS.entrySet()){
     		String scorename = e.getKey();
