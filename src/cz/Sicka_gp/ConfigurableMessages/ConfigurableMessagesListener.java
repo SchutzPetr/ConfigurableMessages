@@ -105,7 +105,7 @@ public class ConfigurableMessagesListener implements Listener{
 	public void onPlayerKick(PlayerKickEvent e){
 		Player p = e.getPlayer();
 		if(s.isSidebarEnable()){
-			//score.unregPl(p);
+			ConfigurableMessages.getPlugin().getScoreboardManager().RemoveSidebar(p);
 		}
 		if(s.isMessageEnable()){
 			if(s.isMessageGroupEnable() && ConfigurableMessages.chat != null && ConfigurableMessages.permission != null){
@@ -145,7 +145,7 @@ public class ConfigurableMessagesListener implements Listener{
                 p.getInventory().addItem(new ItemStack(id, amount, (byte)itemsdatabyte));
             }
             catch(NumberFormatException e){
-                plugin.log.info("Incorrect item format '"+item+"', skipping!");
+                plugin.log.info("[ConfigurableMessages] Error! : Incorrect item format '"+item+"', skipping!");
             }
         }
 		

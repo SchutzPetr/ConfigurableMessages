@@ -48,15 +48,21 @@ Newbies:
    - '17:2-16'
    - '17:3-16'
    
+Automessage:
+   Interval: 60
+   Enable: false 
+   prefix: '&f[&6ConfigurableMessage&f] '
 Sidebar: 
   #Enable Sidebar
-  enable: true
+  Enable: true
   #Sidebar name
-  name: '&6Information'
+  Name: '&6Information'
   #Update interval
-  Update: 10
+  Update: 1
+  #Scores
   SettingItems:
-  #- '&4Balance;%bal'
+  #-'<ScoreName>;<ScoreValue>'
+  - '&4Online;%online_players'
   
      
      

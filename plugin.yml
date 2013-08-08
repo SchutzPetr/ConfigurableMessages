@@ -1,12 +1,12 @@
 main: cz.Sicka_gp.ConfigurableMessages.ConfigurableMessages
 name: ConfigurableMessages
-version: 0.7#Beta
+version: 0.7
 author: Sicka_gp
 description: ConfigurableMessages by Sicka_gp. Lets you set your own join / quit / leave message and Sidebar.
 softdepend: [Vault, Stats, mcMMO, GeoIPTools, Heroes, MagicSpells]
 commands:
    custommessage: 
-     description: Config reload
+     description: Config reload/create and automessage
      aliases: [cm]
    sidebar: 
      aliases: [side]
@@ -16,4 +16,8 @@ Permissions:
       description: Allow command /sidebar hide or /sidebar show
    custommessage.reload: 
       description: Allow command /custommessage reload
+   custommessage.automessage.command: 
+      description: Allow command /custommessage automessage start/stop
+   custommessage.automessage.show: 
+      description: Allow the player to see the message
      

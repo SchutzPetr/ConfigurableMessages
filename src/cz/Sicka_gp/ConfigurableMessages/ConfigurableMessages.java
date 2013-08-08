@@ -13,9 +13,6 @@ import net.minecraft.server.v1_6_R2.EntityPlayer;
 import nl.lolmewn.stats.api.StatsAPI;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
@@ -24,12 +21,11 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.DisplaySlot;
-
 import com.herocraftonline.heroes.Heroes;
 import com.herocraftonline.heroes.characters.CharacterManager;
-import com.nisovin.magicspells.mana.ManaBar;
 
+import cz.Sicka_gp.ConfigurableMessages.Automessages.ConfigurableMessagesAutomessages;
+import cz.Sicka_gp.ConfigurableMessages.Commands.ConfigurableMessagesCommandManager;
 import cz.Sicka_gp.ConfigurableMessages.ScoreBoard.ScoreboardManager;
 import cz.Sicka_gp.ConfigurableMessages.ScoreBoard.ScoreboardPacketManager;
 import cz.Sicka_gp.ConfigurableMessages.Settings.ConfMsfBooleanSetings;
@@ -46,8 +42,8 @@ public class ConfigurableMessages extends JavaPlugin{
 	public File badwordsFile = null;
 	public Logger log = Logger.getLogger("Minecraft");
 	public static StatsAPI api;
-	public static boolean mana;
-	public static ManaBar manabar;
+	//public static boolean mana;
+	//public static ManaSystem manasys;
 	private static ConfigurableMessages plugin;
 	public static Permission permission = null;
     public static Economy econ = null;
@@ -58,8 +54,9 @@ public class ConfigurableMessages extends JavaPlugin{
 	public final ConfigurableMessagesPermissions perm = new ConfigurableMessagesPermissions();
 	public final ConfMsfBooleanSetings s = new ConfMsfBooleanSetings(this);
 	public final ConfMsfOtherSetings set = new ConfMsfOtherSetings(this);
-	public final ScoreboardManager score = new ScoreboardManager(this);
+	public ScoreboardManager score;
 	public final ConfMsfStringSetings cmss = new ConfMsfStringSetings(this);
+	public ConfigurableMessagesAutomessages cma;
 	private static boolean mcmmo;
 	private static CharacterManager heroes;
 	public GeoIPLookup geo = null;
@@ -67,13 +64,20 @@ public class ConfigurableMessages extends JavaPlugin{
 	
 	
 	public void onEnable(){
+		hide.clear();
 		plugin = this;
 		reloadConfiguration();
 		PluginManager pm = getServer().getPluginManager();
+		getCommand("custommessage").setExecutor(new ConfigurableMessagesCommandManager(this));
+		getCommand("sidebar").setExecutor(new ConfigurableMessagesCommandManager(this));
 		pm.registerEvents(this.cl, this);
 		pm.registerEvents(this.clc, this);
-		//sbm.UpdateScore();
 		File Badwords = new File(this.getDataFolder(), "badwords.yml");
+		File message = new File(this.getDataFolder(), "messages.txt");
+		if (!message.exists()) {
+			   saveResource("messages.txt", true);
+			   log.info("[ConfigurableMessages] Creating messages file");
+			}
 		if (!Badwords.exists()) {
 		   saveResource("badwords.yml", true);
 		   log.info("[ConfigurableMessages] Creating badwords file");
@@ -140,30 +144,22 @@ public class ConfigurableMessages extends JavaPlugin{
 			log.info("[ConfigurableMessages] GeoIPTools not found");
 		}
 		
-		if(this.getServer().getPluginManager().getPlugin("MagicSpells") != null){
+		/*if(this.getServer().getPluginManager().getPlugin("MagicSpells") != null){
 			mana = pm.getPlugin("mcMMO") != null;
 			log.info("[ConfigurableMessages] MagicSpells found");
 		}else{
 			log.info("[ConfigurableMessages] MagicSpells not found");
+		}*/
+		cma = new ConfigurableMessagesAutomessages(this);
+		if(s.isAutomessageEnable()){
+			cma.StartBroadcast();
 		}
-		
-		
+		score = new ScoreboardManager(this);
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new ConfigurableMessagesTPS(), 100L, 1L);
 		ConfigurableMessages.getPlugin().getScoreboardManager().setupTimer();
-		for(String score : ConfigurableMessages.getPlugin().getConfig().getStringList("Sidebar.SettingItems")){
-		    String[] scores = score.split(";", 2);
-		    String scorename = scores[0];
-		    String scorevaule = scores[1];
-		    if(!(scorename.length() > 16)){
-		        try{
-		            this.getScoreboardManager().ITEMS.put(scorename, scorevaule);
-		        }catch(Exception e){
-		        	e.printStackTrace();
-		        }
-		    }
-		}
 		log.info("[ConfigurableMessages] version "+ plugin.getDescription().getVersion());
 		log.info("[ConfigurableMessages] Authors " + plugin.getDescription().getAuthors());
+		this.getScoreboardManager().CreateScoreboardObjective();
 		log.info("[ConfigurableMessages] is Enable");
 	}
 	
@@ -188,107 +184,13 @@ public class ConfigurableMessages extends JavaPlugin{
     public static StatsAPI getAPI() {
         return api;
     }
-    public static boolean isMagicSpells(){
+    /*public static boolean isMagicSpells(){
 		return mana;
     	
     }
-    public static ManaBar getManaBar(){
-    	return manabar;
-    }
-	
-	 public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-		 String cmds = cmd.getName();
-		 if (sender instanceof Player){
-				Player player = (Player)sender;
-				if(cmds.equalsIgnoreCase("custommessage")){
-					if ((args == null) || (args.length < 1)) {
-						player.sendMessage(ChatColor.DARK_GREEN + "Author" + ChatColor.WHITE + " : " + ChatColor.DARK_GREEN + ConfigurableMessages.getPlugin().getDescription().getAuthors());
-						player.sendMessage(ChatColor.DARK_GREEN + "Version" + ChatColor.WHITE + " : " + ChatColor.DARK_GREEN + ConfigurableMessages.getPlugin().getDescription().getVersion());
-						player.sendMessage(ChatColor.DARK_GREEN + "Reload config " + ChatColor.WHITE + " : " + ChatColor.DARK_GREEN + "/cm conf reload");
-						player.sendMessage(ChatColor.DARK_GREEN + "Generate new config file " + ChatColor.WHITE + " : " + ChatColor.DARK_GREEN + "/cm conf new");
-						player.sendMessage(ChatColor.DARK_GREEN + "Hide Sidebar " + ChatColor.WHITE + " : " + ChatColor.DARK_GREEN + "/sidebar hide");
-						player.sendMessage(ChatColor.DARK_GREEN + "View sidebar " + ChatColor.WHITE + " : " + ChatColor.DARK_GREEN + "/sidebar show");
-						return true;
-					}
-					if(args[0].equalsIgnoreCase("conf")&& args.length <= 2){
-						if(player.hasPermission(perm.reload)){
-							if ((args == null) || (args.length < 2)) {
-								player.sendMessage(ChatColor.DARK_GREEN + "Reload config " + ChatColor.WHITE + " : " + ChatColor.DARK_GREEN + "/cm conf reload");
-								player.sendMessage(ChatColor.DARK_GREEN + "Generate new config file " + ChatColor.WHITE + " : " + ChatColor.DARK_GREEN + "/cm conf new");
-								return false;
-							}
-							if(args[1].equalsIgnoreCase("reload")){
-								for(Player p : ConfigurableMessages.getPlugin().getServer().getOnlinePlayers()){
-									p.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
-								}
-								reloadConfiguration();
-								player.sendMessage(ChatColor.DARK_RED + "Configuration reloaded");
-								return false;
-							}
-							if(args[1].equalsIgnoreCase("new")){
-								for(Player p : ConfigurableMessages.getPlugin().getServer().getOnlinePlayers()){
-									p.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
-								}
-								saveResource("config.yml", true);
-								player.sendMessage(ChatColor.DARK_GREEN + "Creating config file");
-								log.info("[ConfigurableMessages] Creating config file.");
-								reloadConfiguration();
-								return false;
-							}
-						}else{
-							player.sendMessage(ChatColor.DARK_RED + "You dont have permission for this!");
-						}
-					}else{
-						player.sendMessage(ChatColor.DARK_GREEN + "Author" + ChatColor.WHITE + " : " + ChatColor.DARK_GREEN + ConfigurableMessages.getPlugin().getDescription().getAuthors());
-						player.sendMessage(ChatColor.DARK_GREEN + "Version" + ChatColor.WHITE + " : " + ChatColor.DARK_GREEN + ConfigurableMessages.getPlugin().getDescription().getVersion());
-						player.sendMessage(ChatColor.DARK_GREEN + "Reload config " + ChatColor.WHITE + " : " + ChatColor.DARK_GREEN + "/cm conf reload");
-						player.sendMessage(ChatColor.DARK_GREEN + "Generate new config file " + ChatColor.WHITE + " : " + ChatColor.DARK_GREEN + "/cm conf new");
-						player.sendMessage(ChatColor.DARK_GREEN + "Hide Sidebar " + ChatColor.WHITE + " : " + ChatColor.DARK_GREEN + "/sidebar hide");
-						player.sendMessage(ChatColor.DARK_GREEN + "View sidebar " + ChatColor.WHITE + " : " + ChatColor.DARK_GREEN + "/sidebar show");
-						return true;
-					}
-				}
-				
-				if(cmds.equalsIgnoreCase("sidebar")){
-					if(player.hasPermission(perm.sidebar)){
-						if ((args == null) || (args.length < 1)) {
-							player.sendMessage(ChatColor.DARK_GREEN + "Author" + ChatColor.WHITE + " : " + ChatColor.DARK_GREEN + ConfigurableMessages.getPlugin().getDescription().getAuthors());
-							player.sendMessage(ChatColor.DARK_GREEN + "Version" + ChatColor.WHITE + " : " + ChatColor.DARK_GREEN + ConfigurableMessages.getPlugin().getDescription().getVersion());
-							player.sendMessage(ChatColor.DARK_GREEN + "Hide Sidebar " + ChatColor.WHITE + " : " + ChatColor.DARK_GREEN + "/sidebar hide");
-							player.sendMessage(ChatColor.DARK_GREEN + "View sidebar " + ChatColor.WHITE + " : " + ChatColor.DARK_GREEN + "/sidebar show");
-							return true;
-						}
-						if(args[0].equalsIgnoreCase("show")&& args.length == 1){
-							if(hide.contains(player.getName())){
-								hide.remove(player.getName());
-								this.getScoreboardManager().CreateSidebar(player);
-								player.sendMessage(ChatColor.DARK_GREEN + "Sidebar displayed.");
-								return true;
-							}else{
-								player.sendMessage(ChatColor.RED + "The sidebar is already displayed!");
-							}
-							return true;
-						}
-						if(args[0].equalsIgnoreCase("hide")&& args.length == 1){
-							if(!hide.contains(player.getName())){
-								hide.add(player.getName());
-								this.getScoreboardManager().RemoveSidebar(player);
-								player.sendMessage(ChatColor.DARK_GREEN + "The Sidebar is hidden.");
-							}else{
-								player.sendMessage(ChatColor.RED + "The sidebar is already hidden!");
-							}
-							return true;
-						}else{
-							player.sendMessage(ChatColor.DARK_GREEN + "Author" + ChatColor.WHITE + " : " + ChatColor.DARK_GREEN + ConfigurableMessages.getPlugin().getDescription().getAuthors());
-							player.sendMessage(ChatColor.DARK_GREEN + "Version" + ChatColor.WHITE + " : " + ChatColor.DARK_GREEN + ConfigurableMessages.getPlugin().getDescription().getVersion());
-							player.sendMessage(ChatColor.DARK_GREEN + "Hide Sidebar " + ChatColor.WHITE + " : " + ChatColor.DARK_GREEN + "/sidebar hide");
-							player.sendMessage(ChatColor.DARK_GREEN + "View sidebar " + ChatColor.WHITE + " : " + ChatColor.DARK_GREEN + "/sidebar show");
-							return true;
-						}
-					}
-				}
-		 }return false;
-	 }
+    public static ManaSystem getManaSystem(){
+    	return manasys;
+    }*/
 	
 	private boolean setupEconomy() {
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
@@ -381,7 +283,7 @@ public class ConfigurableMessages extends JavaPlugin{
 	
     public void saveBadwords() {
         if (badwordsFile == null) {
-        	badwordsFile = new File(getDataFolder(), "customConfig.yml");
+        	badwordsFile = new File(getDataFolder(), "badwords.yml");
         }
         if (!badwordsFile.exists()) {            
              this.saveResource("badwords.yml", false);
@@ -398,6 +300,10 @@ public class ConfigurableMessages extends JavaPlugin{
 
 	public static ConfigurableMessages getPlugin() {
 		return plugin;
+	}
+	
+	public ConfigurableMessagesAutomessages getConfigurableMessagesAutomessages(){
+		return cma;
 	}
 
 	public static void setPlugin(ConfigurableMessages plugin) {

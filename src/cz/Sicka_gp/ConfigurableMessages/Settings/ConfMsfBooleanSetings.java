@@ -10,7 +10,7 @@ public class ConfMsfBooleanSetings {
 	}
 	
 	public boolean isSidebarEnable(){
-		return ConfigurableMessages.getPlugin().getConfig().getBoolean("Sidebar.enable");
+		return ConfigurableMessages.getPlugin().getConfig().getBoolean("Sidebar.Enable");
 	}
 	public boolean isMessageEnable() {
 		return ConfigurableMessages.getPlugin().getConfig().getBoolean("Messages.enable");
@@ -23,5 +23,8 @@ public class ConfMsfBooleanSetings {
 	}
 	public boolean isKitsEnable() {
 		return ConfigurableMessages.getPlugin().getConfig().getBoolean("Newbies.Kits");
+	}
+	public boolean isAutomessageEnable() {
+		return ConfigurableMessages.getPlugin().getConfig().getBoolean("Automessage.Enable");
 	}
 }

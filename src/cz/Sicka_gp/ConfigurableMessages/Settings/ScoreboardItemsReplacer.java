@@ -4,8 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import com.gmail.nossr50.api.ExperienceAPI;
-import com.nisovin.magicspells.MagicSpells;
-
 import cz.Sicka_gp.ConfigurableMessages.ConfigurableMessages;
 import cz.Sicka_gp.ConfigurableMessages.ConfigurableMessagesTPS;
 
@@ -36,13 +34,13 @@ public class ScoreboardItemsReplacer {
 				 return score;
 			 }
 		 }
-		 if(ConfigurableMessages.isMagicSpells()){
+		 /*if(ConfigurableMessages.isMagicSpells()){
 			 ConfigurableMessages.getPlugin().log.info("!null");
 			 int score =  getMagicSpellItems(key, p);
 			 if(score != -1){
 				 return score;
 			 }
-		 }
+		 }*/
 		return getLocalItems(key, p);
 		 
 	 }
@@ -113,7 +111,7 @@ public class ScoreboardItemsReplacer {
     }
 	
 	//mcMMO
-	private static int getMcmmoItems(final String key, final Player p) {
+	private static int getMcmmoItems(String key, Player p) {
         if (ScoreboardItemsList.POWLVL.equals(key)) {
             return ExperienceAPI.getPowerLevel(p);
         }
@@ -173,7 +171,7 @@ public class ScoreboardItemsReplacer {
         return -1;
     }
 
-	private static int getStatsItems(final String key, final Player p){
+	private static int getStatsItems(String key, Player p){
 		if(ScoreboardItemsList.PlayTime.equals(key)){
 			int playtime = ConfigurableMessages.getAPI().getPlaytime(p.getName());
 			int a = playtime/3600;
@@ -195,7 +193,7 @@ public class ScoreboardItemsReplacer {
 		
 	}
 	
-	private static int getMagicSpellItems(final String key, final Player p){
+	/*private static int getMagicSpellItems(String key, Player p){
 		if(ScoreboardItemsList.MagicMAX_MANA.equals(key)){
 			return MagicSpells.getManaHandler().getMaxMana(p);
 			
@@ -204,10 +202,12 @@ public class ScoreboardItemsReplacer {
 			return MagicSpells.getManaHandler().getRegenAmount(p);
 			
 		}
-		//if(ScoreboardItemsList.MagicMANA.equals(key)){
+		if(ScoreboardItemsList.MagicMANA.equals(key)){
 			//return ConfigurableMessages.getManaBar().getMana();
-			
-		//}
+			ManaBar bar = ConfigurableMessages.getManaSystem().
+			bar.getMana();
+			MagicSpells.getManaHandler().
+		}
 		return -1;
-	}
+	}*/
 }
